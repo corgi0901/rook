@@ -6,3 +6,5 @@
 
 ## 開発記録（ブログ）
 第0回：[イントロ編](https://corgi-lab.com/self-made/lang-processor-0/)
+
+第1回：[数値を読み込む](https://corgi-lab.com/self-made/lang-processor-1/)
