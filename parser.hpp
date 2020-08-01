@@ -13,6 +13,9 @@ private:
 
 	Node* program(void);
 	Node* num(void);
+	Node* add(void);
+
+	bool consume(const char* str);
 
 public:
 	Node* parse(vector<Token>& tokens);

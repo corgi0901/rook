@@ -4,7 +4,7 @@ test() {
     answer=$1
     input=$2
 
-    result=`./rook $input`
+    result=`./rook "$input"`
 
     if [ "$answer" = "$result" ]; then
         echo "$input => $result"
@@ -16,5 +16,9 @@ test() {
 
 test 42 "42"
 test 0 "0"
+test 9 "7+2"
+test 4 "10-6"
+test 8 "12 + 4 - 8"
+test 10 "12 - 4 + 2"
 
 echo "OK"

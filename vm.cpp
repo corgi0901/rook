@@ -31,6 +31,21 @@ DWORD VM::run(vector<Operation>& code)
 				push(op->operand);
 				break;
 			}
+			case OP_POP:
+			{
+				reg[op->operand] = pop();
+				break;
+			}
+			case OP_ADD:
+			{
+				push(reg[op->operand] + reg[op->operand2]);
+				break;
+			}
+			case OP_SUB:
+			{
+				push(reg[op->operand] - reg[op->operand2]);
+				break;
+			}
 			default:
 				break;
 		}

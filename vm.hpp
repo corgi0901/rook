@@ -15,6 +15,8 @@ private:
 	DWORD stack[STACK_SIZE];	// スタック
 	DWORD* sp;					// スタックポインタ
 
+	DWORD reg[REG_NUM];			// レジスタ
+
 	void push(DWORD val);
 	DWORD pop(void);
 

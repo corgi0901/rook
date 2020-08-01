@@ -1,1 +1,2 @@
-program = num
+program = add
+add = num ("+" num | "-" num)*
