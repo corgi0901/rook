@@ -62,7 +62,15 @@ Node* Parser::mul(void)
 
 Node* Parser::primary(void)
 {
-	if(consume("(")){
+	if(consume("+")){	// 単項演算子 ＋
+		return num();
+	}
+	else if(consume("-")){	// 単項演算子 -
+		Node* numNode = num();
+		numNode->val = -numNode->val;
+		return numNode;
+	}
+	else if(consume("(")){
 		Node* addNode = add();
 		expect(")");
 		return addNode;

@@ -1,4 +1,4 @@
 program = add
 add = mul ("+" mul | "-" mul)*
 mul = primary ("*" primary | "/" primary)*
-primary = num | "(" add ")"
+primary = num | "+" num | "-" num | "(" add ")"
