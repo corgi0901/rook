@@ -45,14 +45,14 @@ Node* Parser::add(void)
 
 Node* Parser::mul(void)
 {
-	Node* node = primary();
+	Node* node = unary();
 
 	while(1){
 		if(consume("*")){
-			node = new Node{ ND_MUL, node, primary() };
+			node = new Node{ ND_MUL, node, unary() };
 		}
 		else if(consume("/")){
-			node = new Node{ ND_DIV, node, primary() };
+			node = new Node{ ND_DIV, node, unary() };
 		}
 		else{
 			return node;
@@ -60,17 +60,26 @@ Node* Parser::mul(void)
 	}
 };
 
+Node* Parser::unary(void)
+{
+	if(consume("+")){
+		return primary();
+	}
+	else if(consume("-")){
+		Node* zero = new Node();
+		zero->kind = ND_NUM;
+		zero->val = 0;
+		Node* node = new Node{ ND_SUB, zero, primary() };
+		return node;
+	}
+	else{
+		return primary();
+	}
+};
+
 Node* Parser::primary(void)
 {
-	if(consume("+")){	// 単項演算子 ＋
-		return num();
-	}
-	else if(consume("-")){	// 単項演算子 -
-		Node* numNode = num();
-		numNode->val = -numNode->val;
-		return numNode;
-	}
-	else if(consume("(")){
+	if(consume("(")){
 		Node* addNode = add();
 		expect(")");
 		return addNode;

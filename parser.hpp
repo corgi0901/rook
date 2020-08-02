@@ -15,6 +15,7 @@ private:
 	Node* num(void);
 	Node* add(void);
 	Node* mul(void);
+	Node* unary(void);
 	Node* primary(void);
 
 	bool consume(const char* str);
