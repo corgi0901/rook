@@ -46,6 +46,16 @@ DWORD VM::run(vector<Operation>& code)
 				push(reg[op->operand] - reg[op->operand2]);
 				break;
 			}
+			case OP_MUL:
+			{
+				push(reg[op->operand] * reg[op->operand2]);
+				break;
+			}
+			case OP_DIV:
+			{
+				push(reg[op->operand] / reg[op->operand2]);
+				break;
+			}
 			default:
 				break;
 		}

@@ -22,14 +22,31 @@ Node* Parser::num(void)
 
 Node* Parser::add(void)
 {
-	Node* node = num();
+	Node* node = mul();
 
 	while(1){
 		if(consume("+")){
-			node = new Node{ ND_ADD, node, num() };
+			node = new Node{ ND_ADD, node, mul() };
 		}
 		else if(consume("-")){
-			node = new Node{ ND_SUB, node, num() };
+			node = new Node{ ND_SUB, node, mul() };
+		}
+		else{
+			return node;
+		}
+	}
+};
+
+Node* Parser::mul(void)
+{
+	Node* node = num();
+
+	while(1){
+		if(consume("*")){
+			node = new Node{ ND_MUL, node, num() };
+		}
+		else if(consume("/")){
+			node = new Node{ ND_DIV, node, num() };
 		}
 		else{
 			return node;

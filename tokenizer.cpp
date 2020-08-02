@@ -26,6 +26,16 @@ vector<Token> Tokenizer::tokenize(char* input)
 			tokens.push_back(token);
 			input++;
 		}
+		else if(strncmp(input, "*", 1) == 0){
+			Token token = { TK_OP, input, 1 };
+			tokens.push_back(token);
+			input++;
+		}
+		else if(strncmp(input, "/", 1) == 0){
+			Token token = { TK_OP, input, 1 };
+			tokens.push_back(token);
+			input++;
+		}
 		else if(isdigit(*input)){
 			Token token = { TK_NUM, input, 0 };
 			for(; isdigit(*input); input++) token.len++;

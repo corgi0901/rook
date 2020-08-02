@@ -24,6 +24,8 @@ typedef enum {
 	ND_NUM,			// 数値
 	ND_ADD,			// +
 	ND_SUB,			// -
+	ND_MUL,			// *
+	ND_DIV,			// /
 } NodeKind;
 
 typedef struct Node Node;
@@ -42,6 +44,8 @@ typedef enum {
 	OP_POP,			// Pop
 	OP_ADD,			// 加算
 	OP_SUB,			// 減算
+	OP_MUL,			// 乗算
+	OP_DIV,			// 除算
 } OP_CODE;
 
 typedef struct {

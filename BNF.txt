@@ -1,2 +1,3 @@
 program = add
-add = num ("+" num | "-" num)*
+add = mul ("+" mul | "-" mul)*
+mul = num ("*" num | "/" num)*

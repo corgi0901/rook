@@ -32,6 +32,26 @@ vector<Operation> Generator::codegen(Node* node)
 
 			break;
 
+		case ND_MUL:
+			codegen(node->left);
+			codegen(node->right);
+
+			operations.push_back( Operation{ OP_POP, REG_GR0 } );
+			operations.push_back( Operation{ OP_POP, REG_GR1 } );
+			operations.push_back( Operation{ OP_MUL, REG_GR0, REG_GR1 } );
+
+			break;
+
+		case ND_DIV:
+			codegen(node->left);
+			codegen(node->right);
+
+			operations.push_back( Operation{ OP_POP, REG_GR0 } );
+			operations.push_back( Operation{ OP_POP, REG_GR1 } );
+			operations.push_back( Operation{ OP_DIV, REG_GR1, REG_GR0 } );
+
+			break;
+
 		default:
 			break;
 	}
