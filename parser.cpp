@@ -14,6 +14,11 @@ Node* Parser::program(void)
 
 Node* Parser::num(void)
 {
+	if(TK_NUM != token->kind){
+		cerr << "Error : expect number" << endl;
+		exit(1);
+	}
+
 	Node* node = new Node();
 	node->kind = ND_NUM;
 	node->val = atoi(token->str);
