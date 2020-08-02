@@ -17,22 +17,32 @@ vector<Token> Tokenizer::tokenize(char* input)
 			input++;
 		}
 		else if(strncmp(input, "+", 1) == 0){
-			Token token = { TK_OP, input, 1 };
+			Token token = { TK_RESERVED, input, 1 };
 			tokens.push_back(token);
 			input++;
 		}
 		else if(strncmp(input, "-", 1) == 0){
-			Token token = { TK_OP, input, 1 };
+			Token token = { TK_RESERVED, input, 1 };
 			tokens.push_back(token);
 			input++;
 		}
 		else if(strncmp(input, "*", 1) == 0){
-			Token token = { TK_OP, input, 1 };
+			Token token = { TK_RESERVED, input, 1 };
 			tokens.push_back(token);
 			input++;
 		}
 		else if(strncmp(input, "/", 1) == 0){
-			Token token = { TK_OP, input, 1 };
+			Token token = { TK_RESERVED, input, 1 };
+			tokens.push_back(token);
+			input++;
+		}
+		else if(strncmp(input, "(", 1) == 0){
+			Token token = { TK_RESERVED, input, 1 };
+			tokens.push_back(token);
+			input++;
+		}
+		else if(strncmp(input, ")", 1) == 0){
+			Token token = { TK_RESERVED, input, 1 };
 			tokens.push_back(token);
 			input++;
 		}

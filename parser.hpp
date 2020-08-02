@@ -15,8 +15,10 @@ private:
 	Node* num(void);
 	Node* add(void);
 	Node* mul(void);
+	Node* primary(void);
 
 	bool consume(const char* str);
+	void expect(const char* str);
 
 public:
 	Node* parse(vector<Token>& tokens);

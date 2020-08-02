@@ -8,7 +8,7 @@
 // トークン関連の定義
 typedef enum {
 	TK_NUM,			// 数値
-	TK_OP,			// 演算子
+	TK_RESERVED,	// 記号
 	TK_EOF,			// 終端
 } TokenKind;
 
