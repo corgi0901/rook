@@ -12,3 +12,5 @@
 第2回：[加減算を実装する](https://corgi-lab.com/self-made/lang-processor-2/)
 
 第3回：[乗除算を実装する](https://corgi-lab.com/self-made/lang-processor-3/)
+
+第4回：[括弧付き計算と単項演算子](https://corgi-lab.com/self-made/lang-processor-4/)
