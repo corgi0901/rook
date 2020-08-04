@@ -7,9 +7,17 @@
 
 using namespace std;
 
-Node* Parser::program(void)
+vector<Node*> Parser::program(void)
 {
-	return add();
+	vector<Node*> nodes;
+
+	nodes.push_back(add());
+
+	while(consume(",") || consume("\n")){
+		nodes.push_back(add());
+	}
+
+	return nodes;
 };
 
 Node* Parser::num(void)
@@ -112,7 +120,7 @@ void Parser::expect(const char* str)
 	}
 };
 
-Node* Parser::parse(vector<Token>& tokens)
+vector<Node*> Parser::parse(vector<Token>& tokens)
 {
 	token = tokens.begin();
 	return program();

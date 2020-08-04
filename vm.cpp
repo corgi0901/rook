@@ -62,6 +62,6 @@ DWORD VM::run(vector<Operation>& code)
 		op++;
 	}
 
-	// スタックトップの値を実行結果とする
-	return pop();
+	// GR0レジスタの値を実行結果とする
+	return reg[REG_GR0];
 };

@@ -5,7 +5,7 @@
 
 using namespace std;
 
-vector<Operation> Generator::codegen(Node* node)
+void Generator::gen(Node* node)
 {
 	switch(node->kind){
 		case ND_NUM:
@@ -13,8 +13,8 @@ vector<Operation> Generator::codegen(Node* node)
 			break;
 
 		case ND_ADD:
-			codegen(node->left);
-			codegen(node->right);
+			gen(node->left);
+			gen(node->right);
 
 			operations.push_back( Operation{ OP_POP, REG_GR0 } );
 			operations.push_back( Operation{ OP_POP, REG_GR1 } );
@@ -23,8 +23,8 @@ vector<Operation> Generator::codegen(Node* node)
 			break;
 
 		case ND_SUB:
-			codegen(node->left);
-			codegen(node->right);
+			gen(node->left);
+			gen(node->right);
 
 			operations.push_back( Operation{ OP_POP, REG_GR0 } );
 			operations.push_back( Operation{ OP_POP, REG_GR1 } );
@@ -33,8 +33,8 @@ vector<Operation> Generator::codegen(Node* node)
 			break;
 
 		case ND_MUL:
-			codegen(node->left);
-			codegen(node->right);
+			gen(node->left);
+			gen(node->right);
 
 			operations.push_back( Operation{ OP_POP, REG_GR0 } );
 			operations.push_back( Operation{ OP_POP, REG_GR1 } );
@@ -43,8 +43,8 @@ vector<Operation> Generator::codegen(Node* node)
 			break;
 
 		case ND_DIV:
-			codegen(node->left);
-			codegen(node->right);
+			gen(node->left);
+			gen(node->right);
 
 			operations.push_back( Operation{ OP_POP, REG_GR0 } );
 			operations.push_back( Operation{ OP_POP, REG_GR1 } );
@@ -54,6 +54,16 @@ vector<Operation> Generator::codegen(Node* node)
 
 		default:
 			break;
+	}
+};
+
+vector<Operation> Generator::codegen(vector<Node*> &nodes)
+{
+	vector<Node*>::iterator node;
+
+	for(node = nodes.begin(); node != nodes.end(); node++){
+		gen(*node);
+		operations.push_back( Operation{ OP_POP, REG_GR0 } );
 	}
 
 	return operations;

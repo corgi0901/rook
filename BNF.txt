@@ -1,4 +1,4 @@
-program = add
+program = add ("," add | "\n" add)*
 add = mul ("+" mul | "-" mul)*
 mul = unary ("*" unary | "/" unary)*
 unary = ("+" | "-")? primary

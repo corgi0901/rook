@@ -23,10 +23,10 @@ int main(int argc, char* argv[])
 	vector<Token> tokens = tokenizer.tokenize(argv[1]);
 	
 	// 構文解析
-	Node* node = parser.parse(tokens);
+	vector<Node*> nodes = parser.parse(tokens);
 
 	// コード生成
-	vector<Operation> code = generator.codegen(node);
+	vector<Operation> code = generator.codegen(nodes);
 
 	// コード実行
 	cout << vm.run(code) << endl;

@@ -11,7 +11,7 @@ class Parser
 private:
 	vector<Token>::iterator token;	// 現在注目しているトークン
 
-	Node* program(void);
+	vector<Node*> program(void);
 	Node* num(void);
 	Node* add(void);
 	Node* mul(void);
@@ -22,7 +22,7 @@ private:
 	void expect(const char* str);
 
 public:
-	Node* parse(vector<Token>& tokens);
+	vector<Node*> parse(vector<Token>& tokens);
 };
 
 #endif // PARSER_HPP_

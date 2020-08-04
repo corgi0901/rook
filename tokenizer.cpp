@@ -13,7 +13,12 @@ vector<Token> Tokenizer::tokenize(char* input)
 	vector<Token> tokens;
 
 	while(*input){
-		if(isspace(*input)){
+		if(strncmp(input, "\n", 1) == 0){
+			Token token = { TK_RESERVED, input, 1 };
+			tokens.push_back(token);
+			input++;
+		}
+		else if(isspace(*input)){
 			input++;
 		}
 		else if(strncmp(input, "+", 1) == 0){
@@ -42,6 +47,11 @@ vector<Token> Tokenizer::tokenize(char* input)
 			input++;
 		}
 		else if(strncmp(input, ")", 1) == 0){
+			Token token = { TK_RESERVED, input, 1 };
+			tokens.push_back(token);
+			input++;
+		}
+		else if(strncmp(input, ",", 1) == 0){
 			Token token = { TK_RESERVED, input, 1 };
 			tokens.push_back(token);
 			input++;
