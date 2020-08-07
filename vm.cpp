@@ -7,7 +7,8 @@ using namespace std;
 
 VM::VM()
 {
-	sp = stack;
+	bp = stack;
+	sp = &stack[16];
 };
 
 void VM::push(DWORD val)
@@ -27,6 +28,11 @@ DWORD VM::run(vector<Operation>& code)
 	while(op != code.end()){
 		switch(op->opcode){
 			case OP_PUSH:
+			{
+				push(reg[op->operand]);
+				break;
+			}
+			case OP_PUSH_I:
 			{
 				push(op->operand);
 				break;
@@ -54,6 +60,16 @@ DWORD VM::run(vector<Operation>& code)
 			case OP_DIV:
 			{
 				push(reg[op->operand] / reg[op->operand2]);
+				break;
+			}
+			case OP_STORE:
+			{
+				bp[reg[op->operand]] = reg[op->operand2];
+				break;
+			}
+			case OP_LOAD:
+			{
+				reg[op->operand] = bp[reg[op->operand2]];
 				break;
 			}
 			default:

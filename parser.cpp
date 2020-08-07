@@ -11,13 +11,29 @@ vector<Node*> Parser::program(void)
 {
 	vector<Node*> nodes;
 
-	nodes.push_back(add());
+	nodes.push_back(expr());
 
 	while(consume(",") || consume("\n")){
-		nodes.push_back(add());
+		nodes.push_back(expr());
 	}
 
 	return nodes;
+};
+
+Node* Parser::expr(void)
+{
+	if(TK_IDENT == token->kind && strncmp((token+1)->str, "=", 1) == 0){
+		Node* ident = new Node();
+		ident->kind = ND_IDENT;
+		ident->name = token->str;
+		ident->len = token->len;
+		token++;
+		expect("=");
+		Node* setNode = new Node{ ND_ASSIGN, ident, add() };
+		return setNode;
+	}
+
+	return add();
 };
 
 Node* Parser::num(void)
@@ -91,6 +107,14 @@ Node* Parser::primary(void)
 		Node* addNode = add();
 		expect(")");
 		return addNode;
+	}
+	else if(TK_IDENT == token->kind){
+		Node* ident = new Node();
+		ident->kind = ND_IDENT;
+		ident->name = token->str;
+		ident->len = token->len;
+		token++;
+		return ident;
 	}
 	else{
 		return num();

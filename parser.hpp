@@ -12,6 +12,7 @@ private:
 	vector<Token>::iterator token;	// 現在注目しているトークン
 
 	vector<Node*> program(void);
+	Node* expr(void);
 	Node* num(void);
 	Node* add(void);
 	Node* mul(void);

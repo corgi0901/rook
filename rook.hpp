@@ -9,6 +9,7 @@
 typedef enum {
 	TK_NUM,			// 数値
 	TK_RESERVED,	// 記号
+	TK_IDENT,		// 識別子
 	TK_EOF,			// 終端
 } TokenKind;
 
@@ -26,6 +27,8 @@ typedef enum {
 	ND_SUB,			// -
 	ND_MUL,			// *
 	ND_DIV,			// /
+	ND_ASSIGN,		// =
+	ND_IDENT,		// 識別子
 } NodeKind;
 
 typedef struct Node Node;
@@ -35,17 +38,22 @@ struct Node {
 	Node *left;		// 左辺
 	Node *right;	// 右辺
 	int val;		// ND_NUMのときに使う
+	char* name;		// 変数名（ND_IDENTのときに使う）
+	int len;		// 名前長（ND_IDENTのときに使う）
 };
 
 
 // 命令関連の定義
 typedef enum {
-	OP_PUSH,		// Push
+	OP_PUSH,		// Push（レジスタ値）
+	OP_PUSH_I,		// Push（即値）
 	OP_POP,			// Pop
 	OP_ADD,			// 加算
 	OP_SUB,			// 減算
 	OP_MUL,			// 乗算
 	OP_DIV,			// 除算
+	OP_STORE,		// レジスタ→メモリへの書き込み
+	OP_LOAD,		// メモリ→レジスタへの読み込み
 } OP_CODE;
 
 typedef struct {
@@ -54,6 +62,13 @@ typedef struct {
 	DWORD operand2;	// 第2オペランド
 } Operation;
 
+
+// 変数定義
+typedef struct {
+	char* name;		// 変数名
+	int len;		// 名前長
+	int	offset;		// データ格納先のオフセット
+} Variable;
 
 // レジスタ関連定義
 typedef enum {

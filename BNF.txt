@@ -1,5 +1,6 @@
-program = add ("," add | "\n" add)*
+program = expr ("," expr | "\n" expr)*
+expr = ident "=" add | add
 add = mul ("+" mul | "-" mul)*
 mul = unary ("*" unary | "/" unary)*
 unary = ("+" | "-")? primary
-primary = num | "(" add ")"
+primary = ident | num | "(" add ")"

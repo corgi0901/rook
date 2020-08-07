@@ -8,6 +8,9 @@ using namespace std;
 
 class Tokenizer
 {
+private:
+	bool isAlnum(char c);
+
 public:
 	vector<Token> tokenize(char* input);
 };

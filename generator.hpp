@@ -10,7 +10,13 @@ class Generator
 {
 private:
 	vector<Operation> operations;
+	vector<Variable> vars;
+	int offset;
+
 	void gen(Node* node);
+	void gen_var(Node* node);
+	bool findVar(const char* name, int len);
+	Variable getVar(const char* name, int len);
 
 public:
 	vector<Operation> codegen(vector<Node*> &nodes);
