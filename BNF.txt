@@ -1,6 +1,7 @@
 program = expr ("," expr | "\n" expr)*
-expr = ident "=" add | add
+expr = ident "=" compare | compare
+compare = add | add ("==" | "!=" | "<" | "<=" | ">" | ">=")  add
 add = mul ("+" mul | "-" mul)*
 mul = unary ("*" unary | "/" unary)*
 unary = ("+" | "-")? primary
-primary = ident | num | "(" add ")"
+primary = ident | num | "(" compare ")"

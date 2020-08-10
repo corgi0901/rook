@@ -22,18 +22,47 @@ vector<Node*> Parser::program(void)
 
 Node* Parser::expr(void)
 {
-	if(TK_IDENT == token->kind && strncmp((token+1)->str, "=", 1) == 0){
+	if(TK_IDENT == token->kind && strncmp((token+1)->str, "=", 1) == 0 && (token+1)->len == 1){
 		Node* ident = new Node();
 		ident->kind = ND_IDENT;
 		ident->name = token->str;
 		ident->len = token->len;
 		token++;
 		expect("=");
-		Node* setNode = new Node{ ND_ASSIGN, ident, add() };
-		return setNode;
+		Node* node = new Node{ ND_ASSIGN, ident, compare() };
+		return node;
 	}
 
-	return add();
+	return compare();
+};
+
+Node* Parser::compare(void)
+{
+	Node* addNode = add();
+	Node* node;
+	if(consume("==")){
+		node = new Node{ ND_EQ, addNode, add()};
+	}
+	else if(consume("!=")){
+		node = new Node{ ND_NEQ, addNode, add()};
+	}
+	else if(consume("<")){
+		node = new Node{ ND_LESS, addNode, add()};
+	}
+	else if(consume("<=")){
+		node = new Node{ ND_EQLESS, addNode, add()};
+	}
+	else if(consume(">")){
+		node = new Node{ ND_LESS, add(), addNode}; // 右左辺を入れ替え
+	}
+	else if(consume(">=")){
+		node = new Node{ ND_EQLESS, add(), addNode}; // 右左辺を入れ替え
+	}
+	else{
+		return addNode;
+	}
+
+	return node;
 };
 
 Node* Parser::num(void)
@@ -104,9 +133,9 @@ Node* Parser::unary(void)
 Node* Parser::primary(void)
 {
 	if(consume("(")){
-		Node* addNode = add();
+		Node* node = compare();
 		expect(")");
-		return addNode;
+		return node;
 	}
 	else if(TK_IDENT == token->kind){
 		Node* ident = new Node();

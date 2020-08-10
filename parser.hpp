@@ -13,6 +13,7 @@ private:
 
 	vector<Node*> program(void);
 	Node* expr(void);
+	Node* compare(void);
 	Node* num(void);
 	Node* add(void);
 	Node* mul(void);

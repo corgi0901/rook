@@ -62,6 +62,26 @@ DWORD VM::run(vector<Operation>& code)
 				push(reg[op->operand] / reg[op->operand2]);
 				break;
 			}
+			case OP_EQ:
+			{
+				push(reg[op->operand] == reg[op->operand2]);
+				break;
+			}
+			case OP_NEQ:
+			{
+				push(reg[op->operand] != reg[op->operand2]);
+				break;
+			}
+			case OP_LESS:
+			{
+				push(reg[op->operand] < reg[op->operand2]);
+				break;
+			}
+			case OP_EQLESS:
+			{
+				push(reg[op->operand] <= reg[op->operand2]);
+				break;
+			}
 			case OP_STORE:
 			{
 				bp[reg[op->operand]] = reg[op->operand2];

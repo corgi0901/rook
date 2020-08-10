@@ -92,6 +92,46 @@ void Generator::gen(Node* node)
 
 			break;
 
+		case ND_EQ:
+			gen(node->left);
+			gen(node->right);
+
+			operations.push_back( Operation{ OP_POP, REG_GR0 } );
+			operations.push_back( Operation{ OP_POP, REG_GR1 } );
+			operations.push_back( Operation{ OP_EQ, REG_GR1, REG_GR0 } );
+
+			break;
+
+		case ND_NEQ:
+			gen(node->left);
+			gen(node->right);
+
+			operations.push_back( Operation{ OP_POP, REG_GR0 } );
+			operations.push_back( Operation{ OP_POP, REG_GR1 } );
+			operations.push_back( Operation{ OP_NEQ, REG_GR1, REG_GR0 } );
+
+			break;
+
+		case ND_LESS:
+			gen(node->left);
+			gen(node->right);
+
+			operations.push_back( Operation{ OP_POP, REG_GR0 } );
+			operations.push_back( Operation{ OP_POP, REG_GR1 } );
+			operations.push_back( Operation{ OP_LESS, REG_GR1, REG_GR0 } );
+
+			break;
+
+		case ND_EQLESS:
+			gen(node->left);
+			gen(node->right);
+
+			operations.push_back( Operation{ OP_POP, REG_GR0 } );
+			operations.push_back( Operation{ OP_POP, REG_GR1 } );
+			operations.push_back( Operation{ OP_EQLESS, REG_GR1, REG_GR0 } );
+
+			break;
+
 		case ND_ASSIGN:
 			gen_var(node->left);
 			gen(node->right);

@@ -29,6 +29,10 @@ typedef enum {
 	ND_DIV,			// /
 	ND_ASSIGN,		// =
 	ND_IDENT,		// 識別子
+	ND_EQ,			// ==
+	ND_NEQ,			// !=
+	ND_LESS,		// <
+	ND_EQLESS,		// <=
 } NodeKind;
 
 typedef struct Node Node;
@@ -52,6 +56,10 @@ typedef enum {
 	OP_SUB,			// 減算
 	OP_MUL,			// 乗算
 	OP_DIV,			// 除算
+	OP_EQ,			// ==
+	OP_NEQ,			// !=
+	OP_LESS,		// <
+	OP_EQLESS,		// <=
 	OP_STORE,		// レジスタ→メモリへの書き込み
 	OP_LOAD,		// メモリ→レジスタへの読み込み
 } OP_CODE;
