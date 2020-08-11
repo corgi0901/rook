@@ -16,3 +16,5 @@
 第4回：[括弧付き計算と単項演算子](https://corgi-lab.com/self-made/lang-processor-4/)
 
 第5回：[連続した式の実行](https://corgi-lab.com/self-made/lang-processor-5/)
+
+第6回：[変数を実装する](https://corgi-lab.com/self-made/lang-processor-6/)
