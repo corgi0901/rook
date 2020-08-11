@@ -117,7 +117,7 @@ vector<Token> Tokenizer::tokenize(char* input)
 		}
 	}
 
-	tokens.push_back( Token{ TK_EOF, NULL, 0 } );
+	tokens.push_back( Token{ TK_EOF, input, 0 } );
 
 	return tokens;
 };

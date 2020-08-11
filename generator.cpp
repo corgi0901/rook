@@ -34,6 +34,11 @@ Variable Generator::getVar(const char* name, int len)
 
 void Generator::gen_var(Node* node)
 {
+	if(ND_IDENT != node->kind){
+		cerr << "Error : expect identifier" << endl;
+		exit(1);
+	}
+
 	if(findVar(node->name, node->len)){
 		Variable var = getVar(node->name, node->len);
 		operations.push_back( Operation{ OP_PUSH_I, var.offset } );

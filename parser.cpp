@@ -154,7 +154,7 @@ bool Parser::consume(const char* str)
 {
 	if(TK_EOF == token->kind) return false;
 
-	if(strncmp(str, token->str, token->len) == 0){
+	if(strlen(str) == token->len && strncmp(str, token->str, token->len) == 0){
 		token++;
 		return true;
 	}
@@ -176,5 +176,12 @@ void Parser::expect(const char* str)
 vector<Node*> Parser::parse(vector<Token>& tokens)
 {
 	token = tokens.begin();
-	return program();
+	vector<Node*> nodes = program();
+
+	if(TK_EOF != token->kind){
+		cerr << "Error : Failed to parse" << endl;
+		exit(1);
+	}
+
+	return nodes;
 };

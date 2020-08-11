@@ -49,5 +49,6 @@ test 0 "1<=0"
 test 1 "1>=1"
 test 0 "0>=1"
 test 1 "num = 1, num = num + 1, num == 2"
+test 0 "num"
 
 echo "OK"

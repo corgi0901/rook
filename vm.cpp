@@ -1,3 +1,4 @@
+#include <cstring>
 #include <iostream>
 #include <vector>
 #include "rook.hpp"
@@ -7,6 +8,7 @@ using namespace std;
 
 VM::VM()
 {
+	memset(stack, 0, sizeof(stack));
 	bp = stack;
 	sp = &stack[16];
 };
