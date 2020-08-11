@@ -157,6 +157,64 @@ void Generator::gen(Node* node)
 
 			break;
 
+		case ND_IF:
+			gen(node->left);
+
+			operations.push_back( Operation{ OP_POP, REG_GR0 } );
+
+			if( ND_ELSE == node->right->kind ){
+				int lb1 = label++;
+				int lb2 = label++;
+
+				operations.push_back( Operation{ OP_JZ, REG_GR0, lb1 } );
+
+				gen(node->right->left);
+				operations.push_back( Operation{ OP_POP, REG_GR0 } );	// 評価値の回収
+				operations.push_back( Operation{ OP_JMP, lb2 } );
+
+				operations.push_back( Operation{ OP_DUMMY, 0, 0, lb1 } );
+
+				gen(node->right->right);
+				operations.push_back( Operation{ OP_POP, REG_GR0 } );	// 評価値の回収
+
+				operations.push_back( Operation{ OP_DUMMY, 0, 0, lb2 } );
+			}
+			else{
+				int lb = label++;
+
+				operations.push_back( Operation{ OP_JZ, REG_GR0, lb } );
+
+				gen(node->right);
+				operations.push_back( Operation{ OP_POP, REG_GR0 } );	// 評価値の回収
+
+				operations.push_back( Operation{ OP_DUMMY, 0, 0, lb } );
+			}
+
+			operations.push_back( Operation{ OP_PUSH_I, 0 } );	// if式としての評価値（0固定）
+
+			break;
+
+		case ND_WHILE:
+		{
+			int lb1 = label++;
+			int lb2 = label++;
+
+			operations.push_back( Operation{ OP_DUMMY, 0, 0, lb1 } );
+
+			gen(node->left);
+			operations.push_back( Operation{ OP_POP, REG_GR0 } );
+			operations.push_back( Operation{ OP_JZ, REG_GR0, lb2 } );
+
+			gen(node->right);
+			operations.push_back( Operation{ OP_POP, REG_GR0 } );	// 評価値の回収
+			operations.push_back( Operation{ OP_JMP, lb1 } );
+
+			operations.push_back( Operation{ OP_DUMMY, 0, 0, lb2 } );
+			operations.push_back( Operation{ OP_PUSH_I, 0 } );	// while式としての評価値（0固定）
+
+			break;
+		}
+
 		default:
 			break;
 	}
@@ -165,6 +223,7 @@ void Generator::gen(Node* node)
 vector<Operation> Generator::codegen(vector<Node*> &nodes)
 {
 	offset = 0;
+	label = 0;
 	vector<Node*>::iterator node;
 
 	for(node = nodes.begin(); node != nodes.end(); node++){

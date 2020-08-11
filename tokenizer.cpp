@@ -104,6 +104,21 @@ vector<Token> Tokenizer::tokenize(char* input)
 			tokens.push_back(token);
 			input++;
 		}
+		else if(strncmp(input, "if", 2) == 0 && !isAlnum(*(input+2))){
+			Token token = { TK_RESERVED, input, 2 };
+			tokens.push_back(token);
+			input += 2;
+		}
+		else if(strncmp(input, "else", 4) == 0 && !isAlnum(*(input+4))){
+			Token token = { TK_RESERVED, input, 4 };
+			tokens.push_back(token);
+			input += 4;
+		}
+		else if(strncmp(input, "while", 5) == 0 && !isAlnum(*(input+5))){
+			Token token = { TK_RESERVED, input, 5 };
+			tokens.push_back(token);
+			input += 5;
+		}
 		else if(isdigit(*input)){
 			Token token = { TK_NUM, input, 0 };
 			for(; isdigit(*input); input++) token.len++;

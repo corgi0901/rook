@@ -12,6 +12,7 @@ private:
 	vector<Operation> operations;
 	vector<Variable> vars;
 	int offset;
+	int label;
 
 	void gen(Node* node);
 	void gen_var(Node* node);

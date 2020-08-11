@@ -33,6 +33,9 @@ typedef enum {
 	ND_NEQ,			// !=
 	ND_LESS,		// <
 	ND_EQLESS,		// <=
+	ND_IF,			// if
+	ND_ELSE,		// else
+	ND_WHILE,		// while
 } NodeKind;
 
 typedef struct Node Node;
@@ -62,12 +65,16 @@ typedef enum {
 	OP_EQLESS,		// <=
 	OP_STORE,		// レジスタ→メモリへの書き込み
 	OP_LOAD,		// メモリ→レジスタへの読み込み
+	OP_JMP,			// 無条件ジャンプ
+	OP_JZ,			// ジャンプ（＝0のとき）
+	OP_DUMMY,		// ダミー命令（ラベル用）
 } OP_CODE;
 
 typedef struct {
 	BYTE opcode;	// オペコード
 	DWORD operand;	// オペランド
 	DWORD operand2;	// 第2オペランド
+	int label;		// ラベル番号
 } Operation;
 
 

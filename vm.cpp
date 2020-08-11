@@ -1,5 +1,6 @@
 #include <cstring>
 #include <iostream>
+#include <map>
 #include <vector>
 #include "rook.hpp"
 #include "vm.hpp"
@@ -25,7 +26,16 @@ DWORD VM::pop(void)
 
 DWORD VM::run(vector<Operation>& code)
 {
-	vector<Operation>::iterator op = code.begin();
+	vector<Operation>::iterator op;
+	map<int, vector<Operation>::iterator> labelMap;
+
+	for(op = code.begin(); op != code.end(); op++){
+		if(OP_DUMMY == op->opcode){
+			labelMap[op->label] = op;
+		}
+	}
+
+	op = code.begin();
 
 	while(op != code.end()){
 		switch(op->opcode){
@@ -92,6 +102,18 @@ DWORD VM::run(vector<Operation>& code)
 			case OP_LOAD:
 			{
 				reg[op->operand] = bp[reg[op->operand2]];
+				break;
+			}
+			case OP_JMP:
+			{
+				op = labelMap[op->operand];
+				break;
+			}
+			case OP_JZ:
+			{
+				if(0 == reg[op->operand]){
+					op = labelMap[op->operand2];
+				}
 				break;
 			}
 			default:

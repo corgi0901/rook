@@ -32,8 +32,55 @@ Node* Parser::expr(void)
 		Node* node = new Node{ ND_ASSIGN, ident, compare() };
 		return node;
 	}
+	else if(TK_RESERVED == token->kind && strncmp(token->str, "if", 2) == 0){
+		return ifExpr();
+	}
+	else if(TK_RESERVED == token->kind && strncmp(token->str, "while", 5) == 0){
+		return whileExpr();
+	}
+	else{
+		return compare();
+	}
+};
 
-	return compare();
+Node* Parser::ifExpr(void)
+{
+	Node* node;
+
+	expect("if");
+	expect("(");
+	Node* cond = compare();
+	expect(")");
+	consume("\n");
+
+	Node *expr1 = expr();
+
+	if(strncmp(token->str, "\n", 1) == 0 && strncmp((token+1)->str, "else", 4) == 0){
+		consume("\n");
+	}
+
+	if(consume("else")){
+		consume("\n");
+		Node* expr2 = expr();
+		Node* elseNode = new Node{ ND_ELSE, expr1, expr2 };
+		node = new Node{ ND_IF, cond, elseNode };
+	}
+	else{
+		node = new Node{ ND_IF, cond, expr1 };
+	}
+
+	return node;
+};
+
+Node* Parser::whileExpr(void)
+{
+	expect("while");
+	expect("(");
+	Node* cond = compare();
+	expect(")");
+	consume("\n");
+	Node* node = new Node{ ND_WHILE, cond, expr() };
+	return node;
 };
 
 Node* Parser::compare(void)

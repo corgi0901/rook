@@ -13,6 +13,8 @@ private:
 
 	vector<Node*> program(void);
 	Node* expr(void);
+	Node* ifExpr(void);
+	Node* whileExpr(void);
 	Node* compare(void);
 	Node* num(void);
 	Node* add(void);
