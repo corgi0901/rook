@@ -24,8 +24,11 @@ vector<Token> Tokenizer::tokenize(char* input)
 
 	while(*input){
 		if(strncmp(input, "\n", 1) == 0){
-			Token token = { TK_RESERVED, input, 1 };
-			tokens.push_back(token);
+			// 先頭または連続した改行は受け付けない
+			if(tokens.size() != 0 && strncmp(tokens.back().str, "\n", 1) != 0){
+				Token token = { TK_RESERVED, input, 1 };
+				tokens.push_back(token);
+			}
 			input++;
 		}
 		else if(isspace(*input)){
@@ -115,6 +118,11 @@ vector<Token> Tokenizer::tokenize(char* input)
 			cerr << "Invalid character : " << *input << endl;
 			exit(1);
 		}
+	}
+
+	// 末尾が改行だったら削除
+	if(strncmp(tokens.back().str, "\n", 1) == 0){
+		tokens.pop_back();
 	}
 
 	tokens.push_back( Token{ TK_EOF, input, 0 } );
