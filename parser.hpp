@@ -16,6 +16,7 @@ private:
 	Node* ifExpr(void);
 	Node* whileExpr(void);
 	Node* compare(void);
+	Node* block(void);
 	Node* num(void);
 	Node* add(void);
 	Node* mul(void);

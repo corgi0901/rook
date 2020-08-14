@@ -38,6 +38,9 @@ Node* Parser::expr(void)
 	else if(TK_RESERVED == token->kind && strncmp(token->str, "while", 5) == 0){
 		return whileExpr();
 	}
+	else if(TK_RESERVED == token->kind && strncmp(token->str, "{", 1) == 0){
+		return block();
+	}
 	else{
 		return compare();
 	}
@@ -81,6 +84,28 @@ Node* Parser::whileExpr(void)
 	consume("\n");
 	Node* node = new Node{ ND_WHILE, cond, expr() };
 	return node;
+};
+
+Node* Parser::block(void)
+{
+	expect("{");
+	consume("\n");
+
+	Node* node = expr();
+
+	while(1){
+		if(consume(",")){
+			node = new Node{ ND_BLOCK, node, expr() };
+		}
+		else if(consume("\n")){
+			if(consume("}")) return node;
+			node = new Node{ ND_BLOCK, node, expr() };
+		}
+		else{
+			expect("}");
+			return node;
+		}
+	}
 };
 
 Node* Parser::compare(void)

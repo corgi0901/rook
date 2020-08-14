@@ -215,6 +215,14 @@ void Generator::gen(Node* node)
 			break;
 		}
 
+		case ND_BLOCK:
+			gen(node->left);
+			operations.push_back( Operation{ OP_POP, REG_GR0 } );
+
+			gen(node->right);
+
+			break;
+
 		default:
 			break;
 	}
