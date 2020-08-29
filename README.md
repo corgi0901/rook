@@ -18,3 +18,5 @@
 第5回：[連続した式の実行](https://corgi-lab.com/self-made/lang-processor-5/)
 
 第6回：[変数を実装する](https://corgi-lab.com/self-made/lang-processor-6/)
+
+第7回：[比較演算子を実装する](https://corgi-lab.com/self-made/lang-processor-7/)
