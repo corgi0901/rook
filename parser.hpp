@@ -22,6 +22,7 @@ private:
 	Node* mul(void);
 	Node* unary(void);
 	Node* primary(void);
+	Node* ident(void);
 
 	bool consume(const char* str);
 	void expect(const char* str);

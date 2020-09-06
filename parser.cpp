@@ -210,16 +210,21 @@ Node* Parser::primary(void)
 		return node;
 	}
 	else if(TK_IDENT == token->kind){
-		Node* ident = new Node();
-		ident->kind = ND_IDENT;
-		ident->name = token->str;
-		ident->len = token->len;
-		token++;
-		return ident;
+		return ident();
 	}
 	else{
 		return num();
 	}
+};
+
+Node* Parser::ident(void)
+{
+	Node* node = new Node();
+	node->kind = ND_IDENT;
+	node->name = token->str;
+	node->len = token->len;
+	token++;
+	return node;
 };
 
 bool Parser::consume(const char* str)
