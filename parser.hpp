@@ -1,8 +1,10 @@
-#ifndef PARSER_HPP_
-#define PARSER_HPP_
+#ifndef _PARSER_HPP_
+#define _PARSER_HPP_
 
 #include <vector>
-#include "rook.hpp"
+#include "container/node.hpp"
+#include "container/token.hpp"
+#include "type.hpp"
 
 using namespace std;
 
@@ -24,11 +26,11 @@ private:
 	Node* primary(void);
 	Node* ident(void);
 
-	bool consume(const char* str);
-	void expect(const char* str);
+	bool consume(string str);
+	void expect(string str);
 
 public:
 	vector<Node*> parse(vector<Token>& tokens);
 };
 
-#endif // PARSER_HPP_
+#endif // _PARSER_HPP_

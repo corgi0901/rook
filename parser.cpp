@@ -2,8 +2,12 @@
 #include <cstring>
 #include <iostream>
 #include <vector>
+#include "container/node.hpp"
+#include "container/token.hpp"
 #include "parser.hpp"
-#include "rook.hpp"
+#include "type.hpp"
+
+//#define PARSE_DEBUG
 
 using namespace std;
 
@@ -22,23 +26,20 @@ vector<Node*> Parser::program(void)
 
 Node* Parser::expr(void)
 {
-	if(TK_IDENT == token->kind && strncmp((token+1)->str, "=", 1) == 0 && (token+1)->len == 1){
-		Node* ident = new Node();
-		ident->kind = ND_IDENT;
-		ident->name = token->str;
-		ident->len = token->len;
+	if(TK_IDENT == token[0].kind && token[1].str == "="){
+		Node* ident = new Node(token->str);
 		token++;
 		expect("=");
-		Node* node = new Node{ ND_ASSIGN, ident, compare() };
+		Node* node = new Node(ND_ASSIGN, ident, compare());
 		return node;
 	}
-	else if(TK_RESERVED == token->kind && strncmp(token->str, "if", 2) == 0){
+	else if(token->str == "if"){
 		return ifExpr();
 	}
-	else if(TK_RESERVED == token->kind && strncmp(token->str, "while", 5) == 0){
+	else if(token->str == "while"){
 		return whileExpr();
 	}
-	else if(TK_RESERVED == token->kind && strncmp(token->str, "{", 1) == 0){
+	else if(token->str == "{"){
 		return block();
 	}
 	else{
@@ -58,18 +59,18 @@ Node* Parser::ifExpr(void)
 
 	Node *expr1 = expr();
 
-	if(strncmp(token->str, "\n", 1) == 0 && strncmp((token+1)->str, "else", 4) == 0){
+	if(token[0].str == "\n" && token[1].str == "else"){
 		consume("\n");
 	}
 
 	if(consume("else")){
 		consume("\n");
 		Node* expr2 = expr();
-		Node* elseNode = new Node{ ND_ELSE, expr1, expr2 };
-		node = new Node{ ND_IF, cond, elseNode };
+		Node* elseNode = new Node(ND_ELSE, expr1, expr2);
+		node = new Node(ND_IF, cond, elseNode);
 	}
 	else{
-		node = new Node{ ND_IF, cond, expr1 };
+		node = new Node(ND_IF, cond, expr1);
 	}
 
 	return node;
@@ -82,7 +83,7 @@ Node* Parser::whileExpr(void)
 	Node* cond = compare();
 	expect(")");
 	consume("\n");
-	Node* node = new Node{ ND_WHILE, cond, expr() };
+	Node* node = new Node(ND_WHILE, cond, expr());
 	return node;
 };
 
@@ -95,11 +96,11 @@ Node* Parser::block(void)
 
 	while(1){
 		if(consume(",")){
-			node = new Node{ ND_BLOCK, node, expr() };
+			node = new Node(ND_BLOCK, node, expr());
 		}
 		else if(consume("\n")){
 			if(consume("}")) return node;
-			node = new Node{ ND_BLOCK, node, expr() };
+			node = new Node(ND_BLOCK, node, expr());
 		}
 		else{
 			expect("}");
@@ -113,22 +114,22 @@ Node* Parser::compare(void)
 	Node* addNode = add();
 	Node* node;
 	if(consume("==")){
-		node = new Node{ ND_EQ, addNode, add()};
+		node = new Node(ND_EQ, addNode, add());
 	}
 	else if(consume("!=")){
-		node = new Node{ ND_NEQ, addNode, add()};
+		node = new Node(ND_NEQ, addNode, add());
 	}
 	else if(consume("<")){
-		node = new Node{ ND_LESS, addNode, add()};
+		node = new Node(ND_LESS, addNode, add());
 	}
 	else if(consume("<=")){
-		node = new Node{ ND_EQLESS, addNode, add()};
+		node = new Node(ND_EQLESS, addNode, add());
 	}
 	else if(consume(">")){
-		node = new Node{ ND_LESS, add(), addNode}; // 右左辺を入れ替え
+		node = new Node(ND_LESS, add(), addNode); // 右左辺を入れ替え
 	}
 	else if(consume(">=")){
-		node = new Node{ ND_EQLESS, add(), addNode}; // 右左辺を入れ替え
+		node = new Node(ND_EQLESS, add(), addNode); // 右左辺を入れ替え
 	}
 	else{
 		return addNode;
@@ -144,9 +145,7 @@ Node* Parser::num(void)
 		exit(1);
 	}
 
-	Node* node = new Node();
-	node->kind = ND_NUM;
-	node->val = atoi(token->str);
+	Node* node = new Node(stoi(token->str));
 	token++;
 	return node;
 };
@@ -157,10 +156,10 @@ Node* Parser::add(void)
 
 	while(1){
 		if(consume("+")){
-			node = new Node{ ND_ADD, node, mul() };
+			node = new Node(ND_ADD, node, mul());
 		}
 		else if(consume("-")){
-			node = new Node{ ND_SUB, node, mul() };
+			node = new Node(ND_SUB, node, mul());
 		}
 		else{
 			return node;
@@ -174,10 +173,10 @@ Node* Parser::mul(void)
 
 	while(1){
 		if(consume("*")){
-			node = new Node{ ND_MUL, node, unary() };
+			node = new Node(ND_MUL, node, unary());
 		}
 		else if(consume("/")){
-			node = new Node{ ND_DIV, node, unary() };
+			node = new Node(ND_DIV, node, unary());
 		}
 		else{
 			return node;
@@ -191,10 +190,8 @@ Node* Parser::unary(void)
 		return primary();
 	}
 	else if(consume("-")){
-		Node* zero = new Node();
-		zero->kind = ND_NUM;
-		zero->val = 0;
-		Node* node = new Node{ ND_SUB, zero, primary() };
+		Node* zero = new Node(0);
+		Node* node = new Node(ND_SUB, zero, primary());
 		return node;
 	}
 	else{
@@ -219,19 +216,16 @@ Node* Parser::primary(void)
 
 Node* Parser::ident(void)
 {
-	Node* node = new Node();
-	node->kind = ND_IDENT;
-	node->name = token->str;
-	node->len = token->len;
+	Node* node = new Node(token->str);
 	token++;
 	return node;
 };
 
-bool Parser::consume(const char* str)
+bool Parser::consume(string str)
 {
 	if(TK_EOF == token->kind) return false;
 
-	if(strlen(str) == token->len && strncmp(str, token->str, token->len) == 0){
+	if(str == token->str){
 		token++;
 		return true;
 	}
@@ -239,9 +233,9 @@ bool Parser::consume(const char* str)
 	return false;
 };
 
-void Parser::expect(const char* str)
+void Parser::expect(string str)
 {
-	if(TK_EOF == token->kind || strncmp(str, token->str, token->len)){
+	if(TK_EOF == token->kind || str != token->str){
 		cerr << "Error : expect \"" << str << "\"" << endl;
 		exit(1);
 	}
@@ -259,6 +253,15 @@ vector<Node*> Parser::parse(vector<Token>& tokens)
 		cerr << "Error : Failed to parse" << endl;
 		exit(1);
 	}
+
+#ifdef PARSE_DEBUG
+	cout << string(30, '-') << endl;
+	for(Node* node : nodes){
+		node->print();
+		cout << endl;
+	}
+	cout << string(30, '-') << endl;
+#endif
 
 	return nodes;
 };

@@ -3,10 +3,22 @@
 #include <cstring>
 #include <iostream>
 #include <vector>
-#include "rook.hpp"
 #include "tokenizer.hpp"
+#include "type.hpp"
 
 using namespace std;
+
+//#define TOKENIZE_DEBUG
+
+static const char* symbols[] = {
+	"+", "-", "*", "/",
+	"(", ")", "{", "}", ",",
+	"==", "=", "!=", "<=", "<", ">=", ">",
+};
+
+static const char* keywords[] = {
+	"if", "else", "while",
+};
 
 bool Tokenizer::isAlnum(char c)
 {
@@ -18,139 +30,127 @@ bool Tokenizer::isAlnum(char c)
 	}
 };
 
+bool Tokenizer::isSymbol(void)
+{
+	for(const char* symbol : symbols){
+		int len = strlen(symbol);
+		if(strncmp(cursor, symbol, len) == 0){
+			Token token(TK_RESERVED, cursor, len);
+			tokens.push_back(token);
+			cursor += len;
+			return true;
+		}
+	}
+	return false;
+};
+
+bool Tokenizer::isKeyword(void)
+{
+	for(const char* keyword : keywords){
+		int len = strlen(keyword);
+		if(strncmp(cursor, keyword, len) == 0 && !isAlnum(*(cursor+len))){
+			Token token(TK_RESERVED, cursor, len);
+			tokens.push_back(token);
+			cursor += len;
+			return true;
+		}
+	}
+	return false;
+};
+
+bool Tokenizer::isNumber(void)
+{
+	char* p = cursor;
+	int len = 0;
+	for(; isdigit(*cursor); cursor++) len++;
+
+	if(len > 0){
+		Token token(TK_NUM, p, len);
+		tokens.push_back(token);
+		return true;
+	}
+	
+	return false;
+};
+
+bool Tokenizer::isIdentifier(void)
+{
+	char* p = cursor;
+	int len = 0;
+	for(; isAlnum(*cursor); cursor++) len++;
+
+	if(len > 0){
+		Token token(TK_IDENT, p, len);
+		tokens.push_back(token);
+		return true;
+	}
+
+	return false;
+};
+
+bool Tokenizer::isNewline(void)
+{
+	if(*cursor == '\n'){
+		// 先頭または連続した改行は受け付けない
+		if(tokens.size() != 0 && tokens.back().str != "\n"){
+			Token token(TK_RESERVED, cursor, 1);
+			tokens.push_back(token);
+		}
+		cursor++;
+		return true;
+	}
+	return false;
+};
+
+void Tokenizer::skip(void)
+{
+	while(*cursor != '\n' && isspace(*cursor)){
+		cursor++;
+	}
+};
+
 vector<Token> Tokenizer::tokenize(char* input)
 {
-	vector<Token> tokens;
+	cursor = input;
+	tokens.clear();
 
-	while(*input){
-		if(strncmp(input, "\n", 1) == 0){
-			// 先頭または連続した改行は受け付けない
-			if(tokens.size() != 0 && strncmp(tokens.back().str, "\n", 1) != 0){
-				Token token = { TK_RESERVED, input, 1 };
-				tokens.push_back(token);
-			}
-			input++;
+	while(*cursor){
+
+		skip();
+
+		if(isSymbol()){
+			/* Do Nothing */
 		}
-		else if(isspace(*input)){
-			input++;
+		else if(isKeyword()){
+			/* Do Nothing */
 		}
-		else if(strncmp(input, "+", 1) == 0){
-			Token token = { TK_RESERVED, input, 1 };
-			tokens.push_back(token);
-			input++;
+		else if(isNumber()){
+			/* Do Nothing */
 		}
-		else if(strncmp(input, "-", 1) == 0){
-			Token token = { TK_RESERVED, input, 1 };
-			tokens.push_back(token);
-			input++;
+		else if(isIdentifier()){
+			/* Do Nothing */
 		}
-		else if(strncmp(input, "*", 1) == 0){
-			Token token = { TK_RESERVED, input, 1 };
-			tokens.push_back(token);
-			input++;
-		}
-		else if(strncmp(input, "/", 1) == 0){
-			Token token = { TK_RESERVED, input, 1 };
-			tokens.push_back(token);
-			input++;
-		}
-		else if(strncmp(input, "(", 1) == 0){
-			Token token = { TK_RESERVED, input, 1 };
-			tokens.push_back(token);
-			input++;
-		}
-		else if(strncmp(input, ")", 1) == 0){
-			Token token = { TK_RESERVED, input, 1 };
-			tokens.push_back(token);
-			input++;
-		}
-		else if(strncmp(input, "{", 1) == 0){
-			Token token = { TK_RESERVED, input, 1 };
-			tokens.push_back(token);
-			input++;
-		}
-		else if(strncmp(input, "}", 1) == 0){
-			Token token = { TK_RESERVED, input, 1 };
-			tokens.push_back(token);
-			input++;
-		}
-		else if(strncmp(input, ",", 1) == 0){
-			Token token = { TK_RESERVED, input, 1 };
-			tokens.push_back(token);
-			input++;
-		}
-		else if(strncmp(input, "==", 2) == 0){
-			Token token = { TK_RESERVED, input, 2 };
-			tokens.push_back(token);
-			input += 2;
-		}
-		else if(strncmp(input, "!=", 2) == 0){
-			Token token = { TK_RESERVED, input, 2 };
-			tokens.push_back(token);
-			input += 2;
-		}
-		else if(strncmp(input, "<=", 2) == 0){
-			Token token = { TK_RESERVED, input, 2 };
-			tokens.push_back(token);
-			input += 2;
-		}
-		else if(strncmp(input, "<", 1) == 0){
-			Token token = { TK_RESERVED, input, 1 };
-			tokens.push_back(token);
-			input++;
-		}
-		else if(strncmp(input, ">=", 2) == 0){
-			Token token = { TK_RESERVED, input, 2 };
-			tokens.push_back(token);
-			input += 2;
-		}
-		else if(strncmp(input, ">", 1) == 0){
-			Token token = { TK_RESERVED, input, 1 };
-			tokens.push_back(token);
-			input++;
-		}
-		else if(strncmp(input, "=", 1) == 0){
-			Token token = { TK_RESERVED, input, 1 };
-			tokens.push_back(token);
-			input++;
-		}
-		else if(strncmp(input, "if", 2) == 0 && !isAlnum(*(input+2))){
-			Token token = { TK_RESERVED, input, 2 };
-			tokens.push_back(token);
-			input += 2;
-		}
-		else if(strncmp(input, "else", 4) == 0 && !isAlnum(*(input+4))){
-			Token token = { TK_RESERVED, input, 4 };
-			tokens.push_back(token);
-			input += 4;
-		}
-		else if(strncmp(input, "while", 5) == 0 && !isAlnum(*(input+5))){
-			Token token = { TK_RESERVED, input, 5 };
-			tokens.push_back(token);
-			input += 5;
-		}
-		else if(isdigit(*input)){
-			Token token = { TK_NUM, input, 0 };
-			for(; isdigit(*input); input++) token.len++;
-			tokens.push_back(token);
-		}
-		else if(isAlnum(*input)){
-			Token token = { TK_IDENT, input, 0 };
-			for(; isAlnum(*input); input++) token.len++;
-			tokens.push_back(token);
+		else if(isNewline()){
+			/* Do Nothing */
 		}
 		else{
-			cerr << "Invalid character : " << *input << endl;
+			cerr << "Error : invalid character : " << *cursor << endl;
 			exit(1);
 		}
 	}
 
 	// 末尾が改行だったら削除
-	if(strncmp(tokens.back().str, "\n", 1) == 0){
+	if(tokens.back().str == "\n"){
 		tokens.pop_back();
 	}
 
-	tokens.push_back( Token{ TK_EOF, input, 0 } );
+	tokens.push_back( Token(TK_EOF, cursor, 0) );
+
+#ifdef TOKENIZE_DEBUG
+	cout << string(30, '-') << endl;
+	for(Token token : tokens) token.print();
+	cout << string(30, '-') << endl;
+#endif
 
 	return tokens;
 };

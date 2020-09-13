@@ -2,14 +2,21 @@
 #include <iostream>
 #include <map>
 #include <vector>
-#include "rook.hpp"
+#include "container/operation.hpp"
+#include "type.hpp"
 #include "vm.hpp"
+
+//#define VM_DEBUG
 
 using namespace std;
 
+// サイズ定義
+#define STACK_SIZE	512	// スタックの深さ
+
 VM::VM()
 {
-	memset(stack, 0, sizeof(stack));
+	stack = new DWORD[STACK_SIZE];
+	reg = new DWORD[REG_NUM];
 	bp = stack;
 	sp = &stack[16];
 };
@@ -119,9 +126,36 @@ DWORD VM::run(vector<Operation>& code)
 			default:
 				break;
 		}
+
+#ifdef VM_DEBUG
+		op->print();
+		this->print();
+		cout << endl;
+#endif
+
 		op++;
 	}
 
 	// GR0レジスタの値を実行結果とする
 	return reg[REG_GR0];
+};
+
+void VM::print(void)
+{
+	cout << "STK | ";
+	for(DWORD *p = stack; p <= sp; p++){
+		if(p == bp){
+			cout << "\033[32m" << *p << "\033[m" << ", ";
+		}
+		else{
+			cout << *p << ", ";
+		}
+	};
+	cout << endl;
+
+	cout << "REG | ";
+	for(int i = 0; i < REG_NUM; i++){
+		cout << reg[i] << ", ";
+	};
+	cout << endl;
 };

@@ -1,8 +1,11 @@
-#ifndef GENERATOR_H_
-#define GENERATOR_H_
+#ifndef _GENERATOR_H_
+#define _GENERATOR_H_
 
+#include <string>
 #include <vector>
-#include "rook.hpp"
+#include "container/node.hpp"
+#include "container/operation.hpp"
+#include "container/variable.hpp"
 
 using namespace std;
 
@@ -14,13 +17,13 @@ private:
 	int offset;
 	int label;
 
-	void gen(Node* node);
-	void gen_var(Node* node);
-	bool findVar(const char* name, int len);
-	Variable getVar(const char* name, int len);
+	void gen(const Node* node);
+	void gen_var(const Node* node);
+	bool findVar(string name);
+	Variable getVar(string name);
 
 public:
 	vector<Operation> codegen(vector<Node*> &nodes);
 };
 
-#endif // GENERATOR_H_
+#endif // _GENERATOR_H_

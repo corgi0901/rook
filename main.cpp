@@ -2,8 +2,8 @@
 #include <vector>
 #include "generator.hpp"
 #include "parser.hpp"
-#include "rook.hpp"
 #include "tokenizer.hpp"
+#include "type.hpp"
 #include "vm.hpp"
 
 using namespace std;

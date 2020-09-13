@@ -1,14 +1,41 @@
-CXXFLAGS=-std=c++17 -g
-SRCS=*.cpp *.hpp
-CXX=g++
+## Directory defines
+BUILDDIR = ./build
 
-rook: $(SRCS)
-	$(CXX) -o rook $(SRCS) $(CXXFLAGS)
+## Target name
+TARGET = rook
 
-test: rook
-	./test.sh
+## Compiler options
+CXX = g++
+CXXFLAGS = -O2 -Wall
+
+SRCS := $(wildcard *.cpp)
+SRCS += $(wildcard */*.cpp)
+OBJS := $(SRCS:%.cpp=$(BUILDDIR)/%.o)
+DEPS := $(OBJS:.o=.d)
+
+CPPFLAGS := -MMD -MP
+
+# Target
+$(TARGET): $(OBJS)
+	$(CXX) -o $@ $^
+
+# c++ source
+$(BUILDDIR)/%.o: %.cpp
+	$(MKDIR_P) $(dir $@)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
+
+.PHONY: all clean rebuild test
 
 clean:
-	rm -f rook *~
+	$(RM) -r $(BUILDDIR) $(TARGET)
 
-.PHONY: test clean
+rebuild:
+	make clean && make
+
+test:
+	make all
+	./test.sh
+
+-include $(DEPS)
+
+MKDIR_P = mkdir -p

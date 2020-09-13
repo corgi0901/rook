@@ -1,29 +1,36 @@
-#ifndef VM_HPP_
-#define VM_HPP_
+#ifndef _VM_HPP_
+#define _VM_HPP_
 
 #include <vector>
-#include "rook.hpp"
+#include "container/operation.hpp"
+#include "type.hpp"
 
 using namespace std;
 
-// サイズ定義
-#define STACK_SIZE	512	// スタックの深さ
+// レジスタ関連定義
+typedef enum {
+	REG_GR0,
+	REG_GR1,
+	REG_NUM,	// レジスタ数
+} REG_NAME;
 
 class VM
 {
 private:
-	DWORD stack[STACK_SIZE];	// スタック
-	DWORD* sp;					// スタックポインタ
-	DWORD* bp;					// ベースポインタ
+	DWORD* stack;	// スタック
+	DWORD* sp;		// スタックポインタ
+	DWORD* bp;		// ベースポインタ
 
-	DWORD reg[REG_NUM];			// レジスタ
+	DWORD* reg;		// レジスタ
 
 	void push(DWORD val);
 	DWORD pop(void);
 
+	void print(void);
+
 public:
-	VM();
+	VM(void);
 	DWORD run(vector<Operation>& code);
 };
 
-#endif // VM_HPP_
+#endif // _VM_HPP_
