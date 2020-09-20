@@ -117,6 +117,8 @@ Node* Parser::func(void)
 
 	expect(")");
 
+	consume("\n");
+
 	Node* node = new Node(name, block());
 
 	return node;
