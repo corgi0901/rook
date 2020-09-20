@@ -22,7 +22,7 @@ private:
 	void skip(void);
 
 public:
-	vector<Token> tokenize(char* input);
+	vector<Token> tokenize(const char* input);
 };
 
 #endif // _TOKENIZER_HPP_

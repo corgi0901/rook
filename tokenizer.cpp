@@ -109,9 +109,9 @@ void Tokenizer::skip(void)
 	}
 };
 
-vector<Token> Tokenizer::tokenize(char* input)
+vector<Token> Tokenizer::tokenize(const char* input)
 {
-	cursor = input;
+	cursor = (char*)input;
 	tokens.clear();
 
 	while(*cursor){

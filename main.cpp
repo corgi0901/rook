@@ -1,3 +1,4 @@
+#include <fstream>
 #include <iostream>
 #include <vector>
 #include "container/function.hpp"
@@ -22,8 +23,16 @@ int main(int argc, char* argv[])
 		return 0;
 	}
 
+	ifstream ifs(argv[1]);
+	if (ifs.fail()) {
+		cerr << "Error : Failed to open " << argv[1] << endl;
+		return -1;
+	}
+
+	string input = string(istreambuf_iterator<char>(ifs), istreambuf_iterator<char>());
+
 	// トークナイズ
-	vector<Token> tokens = tokenizer.tokenize(argv[1]);
+	vector<Token> tokens = tokenizer.tokenize(input.c_str());
 	
 	// 構文解析
 	vector<Node*> nodes = parser.parse(tokens);

@@ -3,8 +3,11 @@
 test() {
     answer=$1
     input=$2
+    testfile="test.rk"
 
-    result=`./rook "$input"`
+    echo "$input" >> $testfile
+
+    result=`./rook $testfile`
 
     if [ "$answer" = "$result" ]; then
         echo "$input => $result"
@@ -12,6 +15,8 @@ test() {
         echo "$input => $answer expected, but got $result"
         exit 1
     fi
+
+    rm $testfile
 }
 
 test 42 "func main(){ 42 }"
