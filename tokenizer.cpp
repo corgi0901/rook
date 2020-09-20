@@ -107,6 +107,12 @@ void Tokenizer::skip(void)
 	while(*cursor != '\n' && isspace(*cursor)){
 		cursor++;
 	}
+
+	if(*cursor == '#'){
+		while(*cursor != '\n'){
+			cursor++;
+		}
+	}
 };
 
 vector<Token> Tokenizer::tokenize(const char* input)
