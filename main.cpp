@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include "container/function.hpp"
 #include "generator.hpp"
 #include "parser.hpp"
 #include "tokenizer.hpp"
@@ -7,6 +8,8 @@
 #include "vm.hpp"
 
 using namespace std;
+
+vector<Function*> funcList;
 
 int main(int argc, char* argv[])
 {

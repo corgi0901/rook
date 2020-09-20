@@ -10,5 +10,5 @@ Variable::Variable(string name, int offset)
 
 void Variable::print(void)
 {
-	cout << offset << " : " << name << endl;
+	cout << "var" << offset << " : " << name << endl;
 };

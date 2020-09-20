@@ -8,6 +8,7 @@ using namespace std;
 static map<DWORD, string> regMap = {
 	{ REG_GR0, "GR0" },
 	{ REG_GR1, "GR1" },
+	{ REG_RAX, "RAX" },
 };
 
 Operation::Operation(BYTE opcode, DWORD operand)
@@ -27,6 +28,11 @@ Operation::Operation(int label)
 {
 	opcode = OP_DUMMY;
 	this->label = label;
+};
+
+Operation::Operation(OP_CODE code)
+{
+	opcode = code;
 };
 
 void Operation::print(void)
@@ -77,6 +83,15 @@ void Operation::print(void)
 			break;
 		case OP_JZ:
 			cout <<  "JZ\t" << regMap[operand] << "\t" << operand2 << endl;
+			break;
+		case OP_CALL:
+			cout <<  "CALL\t" << operand << "\t" << operand2 << endl;
+			break;
+		case OP_RET:
+			cout <<  "RET\t" << endl;
+			break;
+		case OP_EXIT:
+			cout <<  "EXIT\t" << endl;
 			break;
 		case OP_DUMMY:
 			cout <<  "LABEL:" << label << endl;

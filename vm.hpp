@@ -11,6 +11,7 @@ using namespace std;
 typedef enum {
 	REG_GR0,
 	REG_GR1,
+	REG_RAX,
 	REG_NUM,	// レジスタ数
 } REG_NAME;
 

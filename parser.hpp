@@ -18,13 +18,17 @@ private:
 	Node* ifExpr(void);
 	Node* whileExpr(void);
 	Node* compare(void);
+	Node* func(void);
 	Node* block(void);
+	Node* ret(void);
 	Node* num(void);
 	Node* add(void);
 	Node* mul(void);
 	Node* unary(void);
 	Node* primary(void);
 	Node* ident(void);
+	Node* call(void);
+	Node* arg(void);
 
 	bool consume(string str);
 	void expect(string str);

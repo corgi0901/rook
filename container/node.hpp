@@ -22,20 +22,26 @@ typedef enum {
 	ND_ELSE,		// else
 	ND_WHILE,		// while
 	ND_BLOCK,		// {}
+	ND_FUNC,		// function
+	ND_CALL,		// 関数呼び出し
+	ND_ARG,			// 引数
+	ND_RET,			// return
 } NodeKind;
 
 class Node
 {
 public:
-	NodeKind kind;	// トークン種別
-	Node *left;		// 左辺
-	Node *right;	// 右辺
-	int val;		// ND_NUMのときに使う
-	string name;	// 変数名（ND_IDENTのときに使う）
+	NodeKind kind;		// トークン種別
+	Node *left = NULL;	// 左辺
+	Node *right = NULL;	// 右辺
+	int val;			// ND_NUMのときに使う
+	string name;		// 変数名（ND_IDENTまたはND_FUNCのときに使う）
 
+	Node(NodeKind kind);
 	Node(NodeKind kind, Node* left, Node* right);
 	Node(int val);
 	Node(string name);
+	Node(string name, Node* node);
 
 	void print(void);
 };

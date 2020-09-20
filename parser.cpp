@@ -2,8 +2,10 @@
 #include <cstring>
 #include <iostream>
 #include <vector>
+#include "container/function.hpp"
 #include "container/node.hpp"
 #include "container/token.hpp"
+#include "global.hpp"
 #include "parser.hpp"
 #include "type.hpp"
 
@@ -15,10 +17,10 @@ vector<Node*> Parser::program(void)
 {
 	vector<Node*> nodes;
 
-	nodes.push_back(expr());
+	nodes.push_back(func());
 
 	while(consume(",") || consume("\n")){
-		nodes.push_back(expr());
+		nodes.push_back(func());
 	}
 
 	return nodes;
@@ -27,10 +29,9 @@ vector<Node*> Parser::program(void)
 Node* Parser::expr(void)
 {
 	if(TK_IDENT == token[0].kind && token[1].str == "="){
-		Node* ident = new Node(token->str);
-		token++;
+		Node* _ident = ident();
 		expect("=");
-		Node* node = new Node(ND_ASSIGN, ident, compare());
+		Node* node = new Node(ND_ASSIGN, _ident, compare());
 		return node;
 	}
 	else if(token->str == "if"){
@@ -41,6 +42,9 @@ Node* Parser::expr(void)
 	}
 	else if(token->str == "{"){
 		return block();
+	}
+	else if(token->str == "return"){
+		return ret();
 	}
 	else{
 		return compare();
@@ -87,6 +91,37 @@ Node* Parser::whileExpr(void)
 	return node;
 };
 
+Node* Parser::func(void)
+{
+	expect("func");
+
+	if(token->kind != TK_IDENT){
+		cerr << "Error : expect identifier" << endl;
+		exit(1);
+	}
+
+	string name = token->str;
+	token++;
+
+	// 関数リストに登録
+	Function* fn = new Function(name);
+	funcList.push_back(fn);
+
+	expect("(");
+
+	// 引数の処理
+	if(token->kind == TK_IDENT){
+		ident();
+		while(consume(",")) ident();
+	}
+
+	expect(")");
+
+	Node* node = new Node(name, block());
+
+	return node;
+};
+
 Node* Parser::block(void)
 {
 	expect("{");
@@ -107,6 +142,13 @@ Node* Parser::block(void)
 			return node;
 		}
 	}
+};
+
+Node* Parser::ret(void)
+{
+	expect("return");
+	Node* node = new Node(ND_RET, expr(), NULL);
+	return node;
 };
 
 Node* Parser::compare(void)
@@ -206,6 +248,9 @@ Node* Parser::primary(void)
 		expect(")");
 		return node;
 	}
+	else if(TK_IDENT == token->kind && (token+1)->str == "("){
+		return call();
+	}
 	else if(TK_IDENT == token->kind){
 		return ident();
 	}
@@ -218,6 +263,43 @@ Node* Parser::ident(void)
 {
 	Node* node = new Node(token->str);
 	token++;
+
+	// 変数登録
+	Function* curFunc = funcList.back();
+	if(false == curFunc->hasVar(node->name)){
+		curFunc->addVar(node->name);
+	}
+
+	return node;
+};
+
+Node* Parser::call(void)
+{
+	Node* node = new Node(ND_CALL);
+	node->name = token->str;
+	token++;
+	expect("(");
+
+	if(false == consume(")")){
+		node->left = arg();
+		expect(")");
+	}
+
+	return node;
+};
+
+Node* Parser::arg(void)
+{
+	Node* node;
+	Node* left = expr();
+
+	if(consume(",")){
+		node = new Node(ND_ARG, left, arg());
+	}
+	else{
+		node = new Node(ND_ARG, left, NULL);
+	}
+
 	return node;
 };
 
@@ -259,6 +341,9 @@ vector<Node*> Parser::parse(vector<Token>& tokens)
 	for(Node* node : nodes){
 		node->print();
 		cout << endl;
+	}
+	for(Function* func : funcList){
+		func->print();
 	}
 	cout << string(30, '-') << endl;
 #endif

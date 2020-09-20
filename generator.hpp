@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include "container/function.hpp"
 #include "container/node.hpp"
 #include "container/operation.hpp"
 #include "container/variable.hpp"
@@ -13,9 +14,10 @@ class Generator
 {
 private:
 	vector<Operation> operations;
-	vector<Variable> vars;
+	Function* curFunc;
 	int offset;
 	int label;
+	int argc;
 
 	void gen(const Node* node);
 	void gen_var(const Node* node);

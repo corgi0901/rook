@@ -23,6 +23,9 @@ typedef enum {
 	OP_LOAD,		// メモリ→レジスタへの読み込み
 	OP_JMP,			// 無条件ジャンプ
 	OP_JZ,			// ジャンプ（＝0のとき）
+	OP_CALL,		// 関数呼び出し
+	OP_RET,			// 関数からの戻り
+	OP_EXIT,		// 終了命令
 	OP_DUMMY,		// ダミー命令（ラベル用）
 } OP_CODE;
 
@@ -37,6 +40,7 @@ public:
 	Operation(BYTE opcode, DWORD operand);
 	Operation(BYTE opcode, DWORD operand, DWORD operand2);
 	Operation(int label);
+	Operation(OP_CODE code);
 
 	void print(void);
 };

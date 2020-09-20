@@ -19,6 +19,15 @@ static map<NodeKind, string> printTbl = {
 	{ ND_ELSE,		"else"	},
 	{ ND_WHILE,		"while"	},
 	{ ND_BLOCK,		"BLK"	},
+	{ ND_FUNC,		"FUNC"	},
+	{ ND_CALL,		"CALL"	},
+	{ ND_ARG,		"ARG"	},
+	{ ND_RET,		"RET"	},
+};
+
+Node::Node(NodeKind kind)
+{
+	this->kind = kind;
 };
 
 Node::Node(NodeKind kind, Node* left, Node* right)
@@ -38,6 +47,13 @@ Node::Node(string name){
 	this->name = name;
 };
 
+Node::Node(string name, Node* node)
+{
+	kind = ND_FUNC;
+	this->name = name;
+	this->left = node;
+};
+
 void Node::print(void)
 {
 	switch(this->kind){
@@ -52,8 +68,24 @@ void Node::print(void)
 	};
 
 	cout << "( " << printTbl[kind] << " ";
-	left->print();
+
+	if(kind == ND_CALL) cout << name << " ";
+
+	if(left){
+		left->print();
+	}
+	else{
+		cout << "_";
+	}
+
 	cout << " ";
-	right->print();
+
+	if(right){
+		right->print();
+	}
+	else{
+		cout << "_";
+	}
+
 	cout << " )";
 };

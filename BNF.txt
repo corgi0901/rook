@@ -1,10 +1,13 @@
-program = expr ("," expr | "\n" expr)*
-expr = ident "=" compare | ifExpr | whileExpr | block | compare
+program = func ("," func | "\n" func)*
+expr = ident "=" compare | ifExpr | whileExpr | block | compare | ret
 ifExpr = "if" "(" compare ")" ("\n")? expr (("\n")? "else" ("\n")? expr)?
 whileExpr = "while" "(" compare ")" ("\n")? expr
+func = "func" ident "(" (ident ("," ident)*)? ")" block
 block = "{" ("\n")? expr ("," expr | "\n" expr)* ("\n")? "}"
 compare = add | add ("==" | "!=" | "<" | "<=" | ">" | ">=")  add
+ret = "return" (compare)?
 add = mul ("+" mul | "-" mul)*
 mul = unary ("*" unary | "/" unary)*
 unary = ("+" | "-")? primary
-primary = ident | num | "(" compare ")"
+primary = ident | num | "(" compare ")" | call
+call = ident "(" (expr ("," expr)*)? ")"

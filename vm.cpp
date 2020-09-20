@@ -12,13 +12,14 @@ using namespace std;
 
 // サイズ定義
 #define STACK_SIZE	512	// スタックの深さ
+#define LVAR_SIZE 10 // 変数領域のサイズ
 
 VM::VM()
 {
 	stack = new DWORD[STACK_SIZE];
 	reg = new DWORD[REG_NUM];
 	bp = stack;
-	sp = &stack[16];
+	sp = bp + LVAR_SIZE;
 };
 
 void VM::push(DWORD val)
@@ -44,7 +45,12 @@ DWORD VM::run(vector<Operation>& code)
 
 	op = code.begin();
 
-	while(op != code.end()){
+	while(op->opcode != OP_EXIT){
+
+#ifdef VM_DEBUG
+		op->print();
+#endif
+
 		switch(op->opcode){
 			case OP_PUSH:
 			{
@@ -123,12 +129,38 @@ DWORD VM::run(vector<Operation>& code)
 				}
 				break;
 			}
+			case OP_CALL:
+			{
+				int rbp = bp - stack;
+
+				bp = sp - op->operand2 + 1;
+				sp = bp + LVAR_SIZE;
+
+				push(rbp);
+				push(op - code.begin());
+
+				op = labelMap[op->operand];
+
+				break;
+			}
+			case OP_RET:
+			{
+				reg[REG_RAX] = pop();
+				int rop = pop();
+				int rbp = pop();
+
+				sp = bp - 1;
+				bp = stack + rbp;
+				op = code.begin() + rop;
+
+				push(reg[REG_RAX]);
+				break;
+			}
 			default:
 				break;
 		}
 
 #ifdef VM_DEBUG
-		op->print();
 		this->print();
 		cout << endl;
 #endif
@@ -136,8 +168,8 @@ DWORD VM::run(vector<Operation>& code)
 		op++;
 	}
 
-	// GR0レジスタの値を実行結果とする
-	return reg[REG_GR0];
+	// RAXレジスタの値を実行結果とする
+	return reg[REG_RAX];
 };
 
 void VM::print(void)

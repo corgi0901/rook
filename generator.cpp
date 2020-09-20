@@ -1,37 +1,18 @@
 #include <cstring>
 #include <iostream>
 #include <vector>
-#include "generator.hpp"
+#include "container/function.hpp"
 #include "container/node.hpp"
 #include "container/operation.hpp"
 #include "container/variable.hpp"
+#include "generator.hpp"
+#include "global.hpp"
 #include "type.hpp"
 #include "vm.hpp"
 
 //#define CODEGEN_DEBUG
 
 using namespace std;
-
-bool Generator::findVar(string name)
-{
-	for(Variable var : vars){
-		if(name == var.name){
-			return true;
-		}
-	}
-	return false;
-};
-
-Variable Generator::getVar(string name)
-{
-	for(Variable var : vars){
-		if(name == var.name){
-			return var;
-		}
-	}
-	cerr << "Error : " << name << "is not defined" << endl;
-	exit(1);
-};
 
 void Generator::gen_var(const Node* node)
 {
@@ -40,19 +21,18 @@ void Generator::gen_var(const Node* node)
 		exit(1);
 	}
 
-	if(findVar(node->name)){
-		Variable var = getVar(node->name);
-		operations.push_back( Operation( OP_PUSH_I, var.offset ) );
-	}
-	else{
-		Variable var = { node->name, offset++ };
-		vars.push_back(var);
-		operations.push_back( Operation( OP_PUSH_I, var.offset ) );
+	for(Variable* var : curFunc->vars){
+		if(node->name == var->name){
+			operations.push_back( Operation( OP_PUSH_I, var->offset ) );
+			break;
+		}
 	}
 };
 
 void Generator::gen(const Node* node)
 {
+	if(node == NULL) return;
+
 	switch(node->kind){
 		case ND_NUM:
 			operations.push_back( Operation( OP_PUSH_I, node->val ) );
@@ -224,6 +204,34 @@ void Generator::gen(const Node* node)
 
 			break;
 
+		case ND_FUNC:
+			curFunc = getFunc(node->name);
+
+			operations.push_back( Operation( curFunc->label ) );
+			gen(node->left);
+			operations.push_back( Operation( OP_RET ) );
+
+			break;
+
+		case ND_ARG:
+			argc++;
+			gen(node->left);
+			gen(node->right);
+
+			break;
+
+		case ND_CALL:
+			argc = 0;
+			gen(node->left);	// 引数の評価
+			operations.push_back( Operation( OP_CALL, getFunc(node->name)->label, argc ) );
+
+			break;
+
+		case ND_RET:
+			gen(node->left);
+			operations.push_back( Operation( OP_RET ) );
+			break;
+
 		default:
 			break;
 	}
@@ -232,11 +240,20 @@ void Generator::gen(const Node* node)
 vector<Operation> Generator::codegen(vector<Node*> &nodes)
 {
 	offset = 0;
-	label = 0;
+	label = funcList.size();
+
+	Function* mainFunc = getFunc("main");
+	if(!mainFunc){
+		cerr << "Error : function 'main' is not defined" << endl;
+		exit(1);
+	}
+
+	// main関数の呼び出し
+	operations.push_back( Operation( OP_CALL, mainFunc->label, 0 ) );
+	operations.push_back( Operation( OP_EXIT ) );
 
 	for(Node *node : nodes){
 		gen(node);
-		operations.push_back( Operation( OP_POP, REG_GR0 ) );
 	}
 
 #ifdef CODEGEN_DEBUG
