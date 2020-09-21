@@ -25,6 +25,7 @@ typedef enum {
 	OP_JZ,			// ジャンプ（＝0のとき）
 	OP_CALL,		// 関数呼び出し
 	OP_RET,			// 関数からの戻り
+	OP_PUT,			// 画面出力
 	OP_EXIT,		// 終了命令
 	OP_DUMMY,		// ダミー命令（ラベル用）
 } OP_CODE;

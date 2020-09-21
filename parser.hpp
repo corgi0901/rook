@@ -21,6 +21,7 @@ private:
 	Node* func(void);
 	Node* block(void);
 	Node* ret(void);
+	Node* put(void);
 	Node* num(void);
 	Node* add(void);
 	Node* mul(void);

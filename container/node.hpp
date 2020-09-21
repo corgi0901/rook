@@ -26,6 +26,7 @@ typedef enum {
 	ND_CALL,		// 関数呼び出し
 	ND_ARG,			// 引数
 	ND_RET,			// return
+	ND_PUT,			// put
 } NodeKind;
 
 class Node

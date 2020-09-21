@@ -232,6 +232,11 @@ void Generator::gen(const Node* node)
 			operations.push_back( Operation( OP_RET ) );
 			break;
 
+		case ND_PUT:
+			gen(node->left);
+			operations.push_back( Operation( OP_PUT ) );
+			break;
+
 		default:
 			break;
 	}

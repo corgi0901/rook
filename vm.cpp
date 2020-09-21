@@ -156,6 +156,11 @@ DWORD VM::run(vector<Operation>& code)
 				push(reg[REG_RAX]);
 				break;
 			}
+			case OP_PUT:
+			{
+				cout << *sp << endl;
+				break;
+			}
 			default:
 				break;
 		}

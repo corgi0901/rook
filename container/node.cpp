@@ -23,6 +23,7 @@ static map<NodeKind, string> printTbl = {
 	{ ND_CALL,		"CALL"	},
 	{ ND_ARG,		"ARG"	},
 	{ ND_RET,		"RET"	},
+	{ ND_PUT,		"PUT"	},
 };
 
 Node::Node(NodeKind kind)

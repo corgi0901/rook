@@ -46,6 +46,9 @@ Node* Parser::expr(void)
 	else if(token->str == "return"){
 		return ret();
 	}
+	else if(token->str == "put"){
+		return put();
+	}
 	else{
 		return compare();
 	}
@@ -150,6 +153,15 @@ Node* Parser::ret(void)
 {
 	expect("return");
 	Node* node = new Node(ND_RET, expr(), NULL);
+	return node;
+};
+
+Node* Parser::put(void)
+{
+	expect("put");
+	expect("(");
+	Node* node = new Node(ND_PUT, compare(), NULL);
+	expect(")");
 	return node;
 };
 

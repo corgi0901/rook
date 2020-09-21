@@ -17,7 +17,7 @@ static const char* symbols[] = {
 };
 
 static const char* keywords[] = {
-	"if", "else", "while", "func", "return"
+	"if", "else", "while", "func", "return", "put"
 };
 
 bool Tokenizer::isAlnum(char c)

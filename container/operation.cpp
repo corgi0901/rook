@@ -90,6 +90,9 @@ void Operation::print(void)
 		case OP_RET:
 			cout <<  "RET\t" << endl;
 			break;
+		case OP_PUT:
+			cout <<  "PUT\t" << endl;
+			break;
 		case OP_EXIT:
 			cout <<  "EXIT\t" << endl;
 			break;

@@ -41,7 +41,7 @@ int main(int argc, char* argv[])
 	vector<Operation> code = generator.codegen(nodes);
 
 	// コード実行
-	cout << vm.run(code) << endl;
+	vm.run(code);
 
 	return 0;
 };
