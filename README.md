@@ -4,6 +4,40 @@
 
 開発の記録はブログにも残していくつもりなので、誰かの何かのお役に立てば嬉しいです。
 
+## ビルド＆実行方法
+### ビルド
+```
+$ git clone https://github.com/corgi0901/rook.git
+$ cd rook
+$ make
+```
+### 実行
+```
+$ ./rook <ソースファイル>
+```
+
+## サンプルコード
+```
+# sample.rk - Sample code for rook
+
+# Calcurate Fibonacci number
+func fib(n)
+{
+	if(n <= 2){
+		return 1
+	} else {
+		return fib(n-1) + fib(n-2)
+	}
+}
+
+# main function
+func main()
+{
+	ret = fib(10)	# Calcurate
+	put(ret)		# Print result
+}
+```
+
 ## 開発記録（ブログ）
 第0回：[イントロ編](https://corgi-lab.com/self-made/lang-processor-0/)
 
