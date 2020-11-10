@@ -23,18 +23,18 @@ $ ./rook <ソースファイル>
 # Calcurate Fibonacci number
 func fib(n)
 {
-	if(n <= 2){
-		return 1
-	} else {
-		return fib(n-1) + fib(n-2)
-	}
+    if(n <= 2){
+        return 1
+    } else {
+        return fib(n-1) + fib(n-2)
+    }
 }
 
 # main function
 func main()
 {
-	ret = fib(10)	# Calcurate
-	put(ret)		# Print result
+    ret = fib(10)	# Calcurate
+    put(ret)		# Print result
 }
 ```
 
